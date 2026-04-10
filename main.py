@@ -1,7 +1,7 @@
 import requests
 import json
 import pandas as pd
-import psycopg2   # ← NEW
+import psycopg2
 
 def get_data():
     url = "https://api.open-meteo.com/v1/forecast?latitude=12.97&longitude=77.59&current_weather=true"
@@ -35,7 +35,7 @@ def save_to_db(df):
         sslmode="require"
     )
 
-    cursor = conn.cursor() #used to execute sql queries
+    cursor = conn.cursor() # cursor used to execute sql queries
 
     for _, row in df.iterrows():
         cursor.execute(
