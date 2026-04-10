@@ -26,7 +26,7 @@ def process_data(data):
     return df
 
 def save_to_db(df):
-    conn = psycopg2.connect(
+    conn = psycopg2.connect(   # conn = connection btw python & postgresql
         host="weatherdb.ca5koie4aeuq.us-east-1.rds.amazonaws.com",
         database="weatherdb",
         user="saathwikh",        
@@ -35,7 +35,7 @@ def save_to_db(df):
         sslmode="require"
     )
 
-    cursor = conn.cursor()
+    cursor = conn.cursor() #used to execute sql queries
 
     for _, row in df.iterrows():
         cursor.execute(
@@ -48,9 +48,9 @@ def save_to_db(df):
 
 def main():
     data = get_data()
-    save_raw(data)
-    df = process_data(data)
-    save_to_db(df)
+    save_raw(data) # saving raw data to data.json
+    df = process_data(data) # processing data
+    save_to_db(df) # saving processed data to database
     print(df)
 
 if __name__ == "__main__":
