@@ -1,7 +1,7 @@
 import requests
 import json
 import pandas as pd
-import sqlite3
+import psycopg2   # ← NEW
 
 def get_data():
     url = "https://api.open-meteo.com/v1/forecast?latitude=12.97&longitude=77.59&current_weather=true"
@@ -26,8 +26,24 @@ def process_data(data):
     return df
 
 def save_to_db(df):
-    conn = sqlite3.connect("weather.db")
-    df.to_sql("weather", conn, if_exists="append", index=False)
+    conn = psycopg2.connect(
+        host="weatherdb.ca5koie4aeuq.us-east-1.rds.amazonaws.com",
+        database="weatherdb",
+        user="saathwikh",        
+        password="Admin2026",    
+        port="5432",
+        sslmode="require"
+    )
+
+    cursor = conn.cursor()
+
+    for _, row in df.iterrows():
+        cursor.execute(
+            "INSERT INTO weather (temperature, windspeed, time) VALUES (%s, %s, %s)",
+            (row["temperature"], row["windspeed"], row["time"])
+        )
+
+    conn.commit()
     conn.close()
 
 def main():
